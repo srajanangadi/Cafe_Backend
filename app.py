@@ -1,0 +1,38 @@
+from flask import Flask
+from resources.items import blp as ItemsBluePrint
+from resources.users import blp as UsersBluePrint
+from flask_smorest import Api
+from flask_jwt_extended import JWTManager
+from blocklist import BLOCKLIST
+
+app=Flask(__name__)
+
+app.config["PROPOGATE_EXCEPTIONS"] = True
+app.config["API_TITLE"] = "Stores REST Api"
+app.config["API_VERSION"] = "v1"
+app.config["OPENAPI_VERSION"] = "3.0.3"
+
+app.config["JWT_SECRET_KEY"] = "67974246218545842351434579033436051469"
+
+api = Api(app)
+jwt = JWTManager(app)
+
+@jwt.token_in_blocklist_loader
+def check_if_token_in_blocklist(jwt_header,jwt_payload):
+    return jwt_payload["jti"] in BLOCKLIST
+
+@jwt.revoked_token_loader
+def revoked_token_callback(jwt_header, jwt_payload):
+    return (
+        {
+            "description":"User has been logged out",
+            "error": "token_revoked"
+        },
+        401
+    )
+
+api.register_blueprint(ItemsBluePrint)
+api.register_blueprint(UsersBluePrint)
+
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
