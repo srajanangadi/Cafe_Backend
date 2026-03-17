@@ -1,4 +1,3 @@
-# from flask_mysqldb import MySQL
 import mysql.connector
 from mysql.connector import Error
 

@@ -11,7 +11,6 @@ app.config["PROPOGATE_EXCEPTIONS"] = True
 app.config["API_TITLE"] = "Stores REST Api"
 app.config["API_VERSION"] = "v1"
 app.config["OPENAPI_VERSION"] = "3.0.3"
-
 app.config["JWT_SECRET_KEY"] = "67974246218545842351434579033436051469"
 
 api = Api(app)

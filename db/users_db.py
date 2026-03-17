@@ -4,11 +4,6 @@ import hashlib
 import os
 
 def hash_new_password(password):
-    """
-    1. Generate a random 16-byte salt
-    2. Run PBKDF2 with 600,000 iterations
-    3. Return the salt and hash combined
-    """
     salt = os.urandom(16)  # Generate a random salt
     pw_hash = hashlib.pbkdf2_hmac(
         'sha256', 
@@ -21,11 +16,6 @@ def hash_new_password(password):
     return salt.hex() + ":" + pw_hash.hex()
 
 def verify_password(stored_password, provided_password):
-    """
-    1. Split the stored string back into Salt and Hash
-    2. Hash the 'provided_password' using the extracted salt
-    3. Compare the two
-    """
     salt_hex, hash_hex = stored_password.split(':')
     salt = bytes.fromhex(salt_hex)
     
